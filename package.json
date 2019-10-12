@@ -15,6 +15,6 @@
  "license": "ISC",
  "dependencies": {
   "js-xlsx": "^0.8.22",
-  "lastejobb": "^2.5.0"
+  "lastejobb": "^2.14.1"
  }
 }

@@ -2,7 +2,7 @@ const { log, io } = require("lastejobb");
 const path = require("path");
 var XLSX = require("js-xlsx");
 
-let inputFiles = io.findFiles("data/truet-art", ".xlsx");
+let inputFiles = io.findFiles("data/art-truet-ubehandlet", ".xlsx");
 inputFiles = inputFiles.reverse();
 
 for (let inputFile of inputFiles) convertToJson(inputFile);
@@ -19,8 +19,7 @@ function convertToJson(fn) {
     const e = {};
     const row = rows[j];
     for (let col = 0; col < header.length; col++)
-      e[header[col] || "Col" + col] = row[col];
-
+      if (row[col] !== "") e[header[col] || "Col" + col] = row[col];
     r.push(e);
   }
   io.skrivDatafil(path.parse(fn).name, r);

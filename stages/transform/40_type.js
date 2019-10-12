@@ -1,4 +1,4 @@
 const { io } = require("lastejobb");
 
-let tre = io.lesDatafil("truet-art/type.json");
+let tre = io.lesDatafil("art-truet-ubehandlet/type.json");
 io.skrivBuildfil("type", tre);

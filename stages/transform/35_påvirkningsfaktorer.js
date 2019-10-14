@@ -1,10 +1,11 @@
 const { io } = require("lastejobb");
 
-const r = io.lesDatafil("30_unflatten").items;
+const r = io.lesDatafil("30_unflatten");
 
 const pv = {};
 
-r.forEach(e => {
+Object.keys(r).forEach(kode => {
+  const e = r[kode];
   if (!e.Påvirkningsfaktorer) return;
   const på = e.Påvirkningsfaktorer.replace(
     /Skogsdrift, hogst/g,

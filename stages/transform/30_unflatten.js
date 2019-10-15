@@ -1,7 +1,7 @@
-const { io, log, text } = require("lastejobb");
+const { io, log, json, text } = require("lastejobb");
 
 const src = io.lesDatafil("Alle artsgrupper SLICER").items;
-const r = [];
+const r = {};
 
 const taxonId2kode = readTaxonIdMap();
 
@@ -17,8 +17,13 @@ function readTaxonIdMap() {
   return name2kode;
 }
 
+const sted = { S: "svalbard", N: "norge" };
 const redundant = [
+  "kode",
+  "2010",
+  "2010 kategori",
   "2010KAT(uten gradtegn)",
+  "Kategori2015",
   "2015KAT(uten gradtegn)",
   "Norsk navn",
   "Taxon-nivå",
@@ -29,35 +34,29 @@ const redundant = [
   "Familie",
   "Ekspertgruppe",
   "Artsgruppe",
+  "Region",
   "Kolonne1",
-  "Takson id"
+  "Takson id",
+  "Vitenskapelig navn"
 ];
-const x = {};
-const y = {};
 src.forEach(e => {
   Object.keys(e).forEach(key => (e[key] = text.decode(e[key])));
   const parts = e["Takson id"].split("/");
   const taxonId = parts.pop();
-  e.kode = taxonId2kode[e["Vitenskapelig navn"].toLowerCase()];
-  if (!e.kode)
+  const kode = taxonId2kode[e["Vitenskapelig navn"].toLowerCase()];
+  if (!kode)
     return log.warn(
       "Mangler kode for '" + e["Vitenskapelig navn"] + "' taxonId " + taxonId
     );
-  const sted = e.Region[0];
-  if (sted === "S") return;
-  //  if (sted === "S" && e.Kategori2015 !== "LC") debugger;
-  if (y[e.kode]) log.warn(e["Takson id"]);
-  y[e.kode] = 1;
+  json.moveKey(e, "Kategori2015", "kategori");
+  json.moveKey(e, "2010 kategori", "2010.kategori");
+  json.moveKey(e, "2010 kriterier", "2010.kriterier");
+  const f = { 2010: e[2010], gjeldende: e };
+  if (e["2010 kategori"]) f[2010] = { kategori: e["2010 kategori"] };
+  const stedkey = sted[e.Region[0]];
+  if (!r[kode]) r[kode] = {};
+  r[kode][stedkey] = f;
   redundant.forEach(key => delete e[key]);
-  //if (!r[e.kode]) r[e.kode] = {};
-  //  r[e.kode][sted] = e;
-  r.push(e);
-  Object.keys(e).forEach(key => {
-    const v = e[key];
-    if (!x[key]) x[key] = {};
-    x[key][v] = (x[key][v] || 0) + 1;
-  });
 });
 
 io.skrivDatafil(__filename, r);
-io.skrivDatafil("x.json", x);

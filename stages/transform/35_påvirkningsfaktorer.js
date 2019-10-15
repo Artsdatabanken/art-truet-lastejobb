@@ -9,7 +9,7 @@ Object.keys(r).forEach(kode => {
   if (!e.Påvirkningsfaktorer) return;
   const på = e.Påvirkningsfaktorer.replace(
     /Skogsdrift, hogst/g,
-    "Skogsdrift hogst"
+    "Skogsdrift; hogst"
   );
   //  if (på.indexOf("hogst") >= 0) debugger;
   const faktorer = på.split(",");

@@ -57,6 +57,11 @@ src.forEach(e => {
   //  if (e["2010 kategori"]) e[2010] = { kategori: e["2010 kategori"] };
   const stedkey = sted[e.Region[0]];
   if (!r[kode]) r[kode] = {};
+  f.lenke = {
+    rødliste: `https://artsdatabanken.no/Rodliste2015/rodliste2015/${stedkey}/${kode.substring(
+      3
+    )}`
+  };
   r[kode][stedkey] = f;
   redundant.forEach(key => delete e[key]);
 });

@@ -48,10 +48,12 @@ src.forEach(e => {
     return log.warn(
       "Mangler kode for '" + e["Vitenskapelig navn"] + "' taxonId " + taxonId
     );
-  json.moveKey(e, "Kategori2015", "kategori");
-  json.moveKey(e, "2010 kategori", "2010.kategori");
+  json.moveKey(e, "2015KAT(uten gradtegn)", "kategori");
+  json.moveKey(e, "2010KAT(uten gradtegn)", "2010.kategori");
   json.moveKey(e, "2010 kriterier", "2010.kriterier");
+  e.år = 2015;
   const f = { 2010: e[2010], gjeldende: e };
+  if (e[2010]) e[2010].år = 2010;
   if (e["2010 kategori"]) f[2010] = { kategori: e["2010 kategori"] };
   const stedkey = sted[e.Region[0]];
   if (!r[kode]) r[kode] = {};

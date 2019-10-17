@@ -48,6 +48,7 @@ src.forEach(e => {
     return log.warn(
       "Mangler kode for '" + e["Vitenskapelig navn"] + "' taxonId " + taxonId
     );
+  json.moveKey(e, "Tolig utdødd", "Trolig utdødd");
   json.moveKey(e, "2015KAT(uten gradtegn)", "kategori");
   json.moveKey(e, "2010KAT(uten gradtegn)", "2010.kategori");
   json.moveKey(e, "2010 kriterier", "2010.kriterier");

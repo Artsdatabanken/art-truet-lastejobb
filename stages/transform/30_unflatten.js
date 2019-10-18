@@ -9,7 +9,9 @@ function readTaxonIdMap() {
   const aa = io.lesDatafil("art-takson/sciName2ValidSciNameId").items;
   const name2kode = {};
   aa.forEach(e => {
-    let key = e.name;
+    let key = e.name.toLowerCase();
+    name2kode[key] = "AR-" + e.id;
+    key = key.replace(" agg.", "");
     key = key.replace(" var.", "");
     key = key.replace(" subsp.", "");
     name2kode[key] = "AR-" + e.id;

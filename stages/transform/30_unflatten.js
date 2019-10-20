@@ -6,19 +6,26 @@ const r = {};
 const taxonId2kode = readTaxonIdMap();
 
 function readTaxonIdMap() {
-  const aa = io.lesDatafil("art-takson/sciName2ValidSciNameId").items;
-  const name2kode = {};
+  const aa = io.lesDatafil("art-takson/type").items;
+  const name2kode = { preferred: {}, synonym: {} };
   aa.forEach(e => {
-    let key = e.tittel.toLowerCase();
-    name2kode[e.nametype] = name2kode[e.nametype] || {};
-    const dest = name2kode[e.nametype];
-    dest[key] = [...(dest[key] || []), e.kode];
-    var key2 = key.replace(" agg.", "");
-    key2 = key2.replace(" var.", "");
-    key2 = key2.replace(" subsp.", "");
-    if (key !== key2) dest[key2] = [...(dest[key2] || []), e.kode];
+    add(name2kode.preferred, e.tittel.sn, e.kode);
+    if (!e.synonym) return;
+    if (!e.synonym.sn) return;
+    e.synonym.sn.forEach(syn => {
+      add(name2kode.synonym, syn, e.kode);
+    });
   });
   return name2kode;
+}
+
+function add(dest, name, kode) {
+  let key = name.toLowerCase();
+  dest[key] = [...(dest[key] || []), kode];
+  var key2 = key.replace(" agg.", "");
+  key2 = key2.replace(" var.", "");
+  key2 = key2.replace(" subsp.", "");
+  if (key !== key2) dest[key2] = [...(dest[key2] || []), kode];
 }
 
 const sted = { S: "svalbard", N: "norge" };

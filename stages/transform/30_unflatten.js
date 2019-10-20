@@ -9,12 +9,14 @@ function readTaxonIdMap() {
   const aa = io.lesDatafil("art-takson/sciName2ValidSciNameId").items;
   const name2kode = {};
   aa.forEach(e => {
-    let key = e.name.toLowerCase();
-    name2kode[key] = "AR-" + e.id;
-    key = key.replace(" agg.", "");
-    key = key.replace(" var.", "");
-    key = key.replace(" subsp.", "");
-    name2kode[key] = "AR-" + e.id;
+    let key = e.tittel.toLowerCase();
+    name2kode[e.nametype] = name2kode[e.nametype] || {};
+    const dest = name2kode[e.nametype];
+    dest[key] = [...(dest[key] || []), e.kode];
+    var key2 = key.replace(" agg.", "");
+    key2 = key2.replace(" var.", "");
+    key2 = key2.replace(" subsp.", "");
+    if (key !== key2) dest[key2] = [...(dest[key2] || []), e.kode];
   });
   return name2kode;
 }
@@ -45,11 +47,15 @@ src.forEach(e => {
   Object.keys(e).forEach(key => (e[key] = text.decode(e[key])));
   const parts = e["Takson id"].split("/");
   const taxonId = parts.pop();
-  const kode = taxonId2kode[e["Vitenskapelig navn"].toLowerCase()];
-  if (!kode)
+  const lowerName = e["Vitenskapelig navn"].toLowerCase();
+  var koder = taxonId2kode.preferred[lowerName];
+  if (!koder) koder = taxonId2kode.synonym[lowerName];
+  if (!koder) {
+    taxonId2kode[e["Vitenskapelig navn"].toLowerCase()];
     return log.warn(
       "Mangler kode for '" + e["Vitenskapelig navn"] + "' taxonId " + taxonId
     );
+  }
   json.moveKey(e, "Tolig utdødd", "Trolig utdødd");
   json.moveKey(e, "2015KAT(uten gradtegn)", "kategori");
   json.moveKey(e, "2010KAT(uten gradtegn)", "2010.kategori");
@@ -59,6 +65,14 @@ src.forEach(e => {
   if (e[2010]) e[2010].år = 2010;
   //  if (e["2010 kategori"]) e[2010] = { kategori: e["2010 kategori"] };
   const stedkey = sted[e.Region[0]];
+  if (koder.length > 1)
+    log.warn(
+      "Flere mulig treff for " +
+        e["Vitenskapelig navn"] +
+        ": " +
+        koder.join(",")
+    );
+  const kode = koder[0];
   if (!r[kode]) r[kode] = {};
   e.lenke = {
     rødliste_2015: `https://artsdatabanken.no/Rodliste2015/rodliste2015/${stedkey}/${kode.substring(

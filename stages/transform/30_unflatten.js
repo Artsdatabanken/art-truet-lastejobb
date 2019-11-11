@@ -57,6 +57,7 @@ src.forEach(e => {
   const lowerName = e["Vitenskapelig navn"].toLowerCase();
   var koder = taxonId2kode.preferred[lowerName];
   if (!koder) koder = taxonId2kode.synonym[lowerName];
+  if (lowerName === "chaetophora pisformis") debugger;
   if (!koder) {
     taxonId2kode[e["Vitenskapelig navn"].toLowerCase()];
     return log.warn(

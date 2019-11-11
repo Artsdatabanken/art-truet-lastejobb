@@ -2,7 +2,7 @@ const { log, io } = require("lastejobb");
 const path = require("path");
 var XLSX = require("js-xlsx");
 
-let inputFiles = io.findFiles("data/art-truet-ubehandlet", ".xlsx");
+let inputFiles = io.findFiles("temp/art-truet-ubehandlet", ".xlsx");
 inputFiles = inputFiles.reverse();
 
 for (let inputFile of inputFiles) convertToJson(inputFile);

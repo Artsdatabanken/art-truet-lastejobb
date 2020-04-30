@@ -1,12 +1,12 @@
 const { io, log, json, text } = require("lastejobb");
 
-const src = io.lesDatafil("Alle artsgrupper SLICER").items;
+const src = io.lesTempJson("Alle artsgrupper SLICER");
 const r = {};
 
 const taxonId2kode = readTaxonIdMap();
 
 function readTaxonIdMap() {
-  const aa = io.lesDatafil("art-takson/type").items;
+  const aa = io.lesTempJson("art-takson/type");
   const name2kode = { preferred: {}, synonym: {} };
   aa.forEach(e => {
     add(name2kode.preferred, e.tittel.sn, e.kode);
@@ -76,9 +76,9 @@ src.forEach(e => {
   if (koder.length > 1)
     log.warn(
       "Flere mulig treff for " +
-        e["Vitenskapelig navn"] +
-        ": " +
-        koder.join(",")
+      e["Vitenskapelig navn"] +
+      ": " +
+      koder.join(",")
     );
   const kode = koder[0];
   if (!r[kode]) r[kode] = {};

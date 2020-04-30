@@ -1,20 +1,20 @@
 {
- "name": "truet-art-lastejobb",
- "version": "1.0.0",
- "description": "",
- "main": "index.js",
- "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "download": "node index download",
-  "transform": "node index transform",
-  "build": "npm run download && npm run transform",
-  "deploy": "./scripts/deploy.sh"
- },
- "keywords": [],
- "author": "",
- "license": "ISC",
- "dependencies": {
-  "js-xlsx": "^0.8.22",
-  "lastejobb": "^2.22.0"
- }
+    "name": "truet-art-lastejobb",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "download": "node node_modules/lastejobb/lastejobb stages/download",
+        "transform": "node node_modules/lastejobb/lastejobb stages/transform",
+        "build": "npm run download && npm run transform",
+        "deploy": "./scripts/deploy.sh"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "js-xlsx": "^0.8.22",
+        "lastejobb": "^3.5.3"
+    }
 }
